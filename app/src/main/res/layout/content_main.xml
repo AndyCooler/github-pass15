@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/linearLayout">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="01"
+            android:id="@+id/beginnA"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="01"
+            android:id="@+id/beginn00"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="01"
+            android:id="@+id/endeA"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="01"
+            android:id="@+id/ende00"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="02"
+            android:id="@+id/beginnB"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="02"
+            android:id="@+id/beginn15"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="02"
+            android:id="@+id/endeB"
+            android:textSize="48sp"                 android:onClick="verarbeiteKlick"                 android:clickable="true"                 android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="02"
+            android:id="@+id/ende15"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="03"
+            android:id="@+id/beginnC"
+            android:textSize="48sp"                 android:onClick="verarbeiteKlick"                 android:clickable="true"                 android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="03"
+            android:id="@+id/beginn30"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="03"
+            android:id="@+id/endeC"
+            android:textSize="48sp"                 android:onClick="verarbeiteKlick"                 android:clickable="true"                 android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="03"
+            android:id="@+id/ende30"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="04"
+            android:id="@+id/beginnD"
+            android:textSize="48sp"                 android:onClick="verarbeiteKlick"                 android:clickable="true"                 android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="04"
+            android:id="@+id/beginn45"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="04"
+            android:id="@+id/endeD"
+            android:textSize="48sp"                 android:onClick="verarbeiteKlick"                 android:clickable="true"                 android:gravity="center"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="04"
+            android:id="@+id/ende45"
+            android:layout_weight="1"
+            android:textSize="48sp"
+            android:onClick="verarbeiteKlick"
+            android:clickable="true"
+            android:gravity="center" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/messageView"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="blank"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mythosapps.pass15.MainActivity">
+    <item
+        android:id="@+id/action_change_unlock_pattern"
+        android:orderInCategory="100"
+        android:title="@string/menu_change_unlock_pattern"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="700"
+        android:title="@string/menu_about"
+        app:showAsAction="never"
+        android:icon="@android:drawable/ic_menu_month"></item>
+
+</menu>

@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Pass15</string>
+    <string name="menu_change_unlock_pattern">Change unlock pattern</string>
+    <string name="menu_lock_screen">Lock screen</string>
+    <string name="new_password_title">New Password</string>
+    <string name="new_password_new_button">New</string>
+    <string name="new_password_cancel_button">Cancel</string>
+    <string name="new_password_error_exists">Entry already there!</string>
+    <string name="edit_password_edit_button">Edit Password</string>
+    <string name="edit_password_title">Edit Password</string>
+    <string name="edit_password_category">Category</string>
+    <string name="edit_password_site">Site</string>
+    <string name="edit_password_username">Username</string>
+    <string name="edit_password_password">Password</string>
+    <string name="menu_about">About..</string>
+    <string name="new_unlock_code_save_success">Code saved.</string>
+    <string name="message_view_set_code">Set your unlock code, left to right..</string>
+    <string name="message_view_enter_code">Enter your code to unlock..</string>
+</resources>
