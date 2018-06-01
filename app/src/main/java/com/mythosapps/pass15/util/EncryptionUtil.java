@@ -62,8 +62,10 @@ public final class EncryptionUtil {
     }
 
     public static void writeAndEncrypt(OutputStream fos, String dataToEncrypt) throws Exception {
+        String toEncrypt = dataToEncrypt == null ? "" : dataToEncrypt;
+
         try {
-            fos.write(EncryptionUtil.encrypt(dataToEncrypt));
+            fos.write(EncryptionUtil.encrypt(toEncrypt));
             fos.flush();
             fos.close();
             fos = null;
