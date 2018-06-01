@@ -27,13 +27,13 @@ public class EncryptionUtilTest {
 
         String actual = EncryptionUtil.decrypt(temp);
 
-        System.out.println("result:'" + temp + "'");
+        System.out.println("testEncryptDecrypt result:'" + temp + "'");
 
         assertEquals(expected, actual);
     }
 
     @Test
-    public void testWriteAndEncrypt() throws Exception {
+    public void testEncryptDecryptStream() throws Exception {
         String expected = "1111";
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -41,18 +41,18 @@ public class EncryptionUtilTest {
 
         String temp = os.toString("UTF-8");
 
-        System.out.println("testWriteAndEncrypt result:'" + temp + "'");
+        System.out.println("testEncryptDecryptStream result:'" + temp + "'");
 
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 
         String actual = EncryptionUtil.readAndDecrypt(is);
-        System.out.println("testWriteAndEncrypt result: actual:'" + actual + "'");
+        System.out.println("testEncryptDecryptStream result: actual:'" + actual + "'");
 
         assertEquals(expected, actual);
     }
 
     @Test
-    public void testWriteAndEncryptNull() throws Exception {
+    public void testEncryptDecryptStreamWithNullParam() throws Exception {
         String expected = null;
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -60,12 +60,12 @@ public class EncryptionUtilTest {
 
         String temp = os.toString("UTF-8");
 
-        System.out.println("testWriteAndEncrypt result:'" + temp + "'");
+        System.out.println("testEncryptDecryptStreamWithNullParam result:'" + temp + "'");
 
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 
         String actual = EncryptionUtil.readAndDecrypt(is);
-        System.out.println("testWriteAndEncrypt result: actual:'" + actual + "'");
+        System.out.println("testEncryptDecryptStreamWithNullParam result: actual:'" + actual + "'");
 
         assertEquals(expected, actual);
     }
