@@ -1,33 +1,27 @@
 package com.mythosapps.pass15.storage;
 
-        import android.Manifest;
-        import android.app.Activity;
-        import android.content.pm.PackageManager;
-        import android.support.v4.app.ActivityCompat;
-        import android.util.Log;
-        import android.widget.Toast;
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+import android.widget.Toast;
 
-        import com.mythosapps.pass15.types.PasswordEntry;
-        import com.mythosapps.pass15.util.ConfigXmlParser;
-        import com.mythosapps.pass15.util.EncryptionUtil;
+import com.mythosapps.pass15.types.PasswordEntry;
+import com.mythosapps.pass15.util.ConfigXmlParser;
+import com.mythosapps.pass15.util.EncryptionUtil;
 
-        import java.io.BufferedReader;
-        import java.io.BufferedWriter;
-        import java.io.ByteArrayInputStream;
-        import java.io.ByteArrayOutputStream;
-        import java.io.File;
-        import java.io.FileInputStream;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStreamReader;
-        import java.io.OutputStreamWriter;
-        import java.io.PrintWriter;
-        import java.util.ArrayList;
-        import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by andreas on 31.05.17.
- *
+ * <p>
  * Encrypted file storage.
  */
 
@@ -216,7 +210,7 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity
@@ -234,7 +228,6 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
             );
         }
     }
-
 
 
     private void fatal(String method, String msg) {

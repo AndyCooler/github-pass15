@@ -16,8 +16,6 @@ public interface ConfigStorageFacade {
             "<config>\n";
     String XML_END = "</config>\n";
 
-    // TODO saveUnlockCode..
-
     public String loadUnlockCode(Activity activity);
 
     List<PasswordEntry> loadConfigXml(Activity activity);

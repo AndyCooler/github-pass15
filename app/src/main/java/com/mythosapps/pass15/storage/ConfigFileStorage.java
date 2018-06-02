@@ -38,6 +38,8 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
 
     private ConfigXmlParser parser = new ConfigXmlParser();
 
+    EncryptedFileStorage encryptedParallel = new EncryptedFileStorage();
+
     private Activity activity;
 
     public ConfigFileStorage() {
@@ -89,6 +91,13 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         }
         Log.i(getClass().getName(), "Loaded unlock code from ConfigFileStorage.");
 
+        String decrypted = encryptedParallel.loadUnlockCode(activity);
+        if ((loadedUnlockCode == null && decrypted == null) || (loadedUnlockCode.equals(decrypted))) {
+            Log.i(getClass().getName(), "loadUnlockCode : same as encrypted, all ok.");
+        } else {
+            Log.e(getClass().getName(), "loadUnlockCode : not equal to encrypted, error!.");
+        }
+
         return loadedUnlockCode;
     }
 
@@ -122,6 +131,9 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         } catch (IOException e) {
             fatal("saveUnlockCode", "Error saving unlock code to file " + filename);
             Log.e(getClass().getName(), "Error saving unlock code to file " + filename + " as " + file.getAbsolutePath(), e);
+        }
+        if (result == true) {
+            encryptedParallel.saveUnlockCode(selectedUnlockCode);
         }
         return result;
     }
@@ -176,6 +188,13 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         }
         Log.i(getClass().getName(), "Loaded " + loadedConfig.size() + " entries from ConfigFileStorage.");
 
+        List<PasswordEntry> decrypted = encryptedParallel.loadConfigXml(activity);
+        if (loadedConfig.size() != decrypted.size()) {
+            Log.i(getClass().getName(), "loadUnlockCode : same as encrypted, all ok.");
+        } else {
+            Log.e(getClass().getName(), "loadUnlockCode : not equal to encrypted, error!.");
+        }
+
         return loadedConfig;
     }
 
@@ -210,6 +229,11 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
             fatal("saveExternalConfigXml", "Error saving file " + filename);
             Log.e(getClass().getName(), "Error saving file " + filename + " as " + file.getAbsolutePath(), e);
         }
+
+        if (result == true) {
+            encryptedParallel.saveExternalConfigXml(activity, tasks);
+        }
+
         return result;
     }
 

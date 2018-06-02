@@ -68,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_change_unlock_pattern) {
-            // TODO funktioniert noch nicht! Wenn man null hier speichert, danach wird nicht mehr der echte Code gespeichert
-            //storage.saveUnlockCode(null);
-            //reStartMainActivity();
+            storage.saveUnlockCode(null);
+            reStartMainActivity();
             return true;
         }
         if (id == R.id.action_about) {
