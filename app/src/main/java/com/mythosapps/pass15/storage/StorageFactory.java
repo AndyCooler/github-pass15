@@ -11,7 +11,6 @@ public class StorageFactory {
 
     private static ConfigStorageFacade INSTANCE_CONFIG_STORE = null;
 
-
     public static ConfigStorageFacade getConfigStorage() {
         if (INSTANCE_CONFIG_STORE == null) {
             INSTANCE_CONFIG_STORE = createConfigStorage();

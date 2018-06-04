@@ -11,11 +11,13 @@ import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.ConfigXmlParser;
 import com.mythosapps.pass15.util.EncryptionUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
     public String loadUnlockCode(Activity activity) {
         this.activity = activity;
 
-        verifyStoragePermissions(activity);
+        //TODO verifyStoragePermissions(activity);
 
         String loadedUnlockCode = null;
 
@@ -82,7 +84,7 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
 
         this.activity = activity;
 
-        verifyStoragePermissions(activity);
+        //TODO verifyStoragePermissions(activity);
 
         if (!initialized && !init()) {
             return false;
@@ -149,7 +151,9 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
         try {
             fis = new FileInputStream(file);
 
-            loadedConfig = parser.parse(fis);
+            String encryptedContent = EncryptionUtil.readAndDecrypt(fis);
+            ByteArrayInputStream bis = new ByteArrayInputStream(encryptedContent.getBytes(Charset.forName("UTF-8")));
+            loadedConfig = parser.parse(bis);
         } catch (Throwable e) {
             fatal("loadConfigXml", "Error loading config from file " + filename + " " + e.getMessage());
             Log.e(getClass().getName(), "Error loading config from file " + filename, e);
@@ -178,25 +182,32 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
         }
 
         File file = new File(storageDir, filename);
+        FileOutputStream fos = null;
         boolean result = false;
         try {
-            FileOutputStream fos = new FileOutputStream(file, false);
+            fos = new FileOutputStream(file, false);
 
-            PrintWriter pw = new PrintWriter(fos);
-            pw.println(XML_PROLOG);
+            String content = XML_PROLOG;
             for (PasswordEntry task : tasks) {
-                pw.println(task.toXmlConfig());
+                content += task.toXmlConfig();
             }
-            pw.println(XML_END);
-            pw.flush();
-            pw.close();
+            content += XML_END;
+            EncryptionUtil.writeAndEncrypt(fos, content);
             fos.close();
 
             Log.i(getClass().getName(), "Saved file " + filename);
             result = true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             fatal("saveExternalConfigXml", "Error saving file " + filename);
             Log.e(getClass().getName(), "Error saving file " + filename + " as " + file.getAbsolutePath(), e);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
         return result;
     }

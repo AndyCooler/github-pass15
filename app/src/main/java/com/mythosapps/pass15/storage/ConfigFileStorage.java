@@ -10,12 +10,15 @@ import android.widget.Toast;
 import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.ConfigXmlParser;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -24,11 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by andreas on 09.02.17.
- *
- * Default to xml asset config from app. Try and load from external xml config file,
- * then merge with asset config from app by first adding tasks from external config file, second
- * adding tasks from asset config.
+ * File store, plain xml.
  */
 
 public class ConfigFileStorage extends FileStorage implements ConfigStorageFacade {
@@ -65,13 +64,10 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
             return loadedUnlockCode;
         }
 
-        BufferedReader reader = null;
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
-            reader = new BufferedReader(new InputStreamReader(fis));
-
-            loadedUnlockCode = reader.readLine();
+            loadedUnlockCode = IOUtils.toString(fis);
             if (loadedUnlockCode == null || loadedUnlockCode.length() != 4) {
                 Log.w(getClass().getName(), "loadUnlockCode : unlock code invalid in " + filename);
                 return null;
@@ -80,25 +76,23 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         } catch (Throwable e) {
             fatal("loadUnlockCode", "Error loading unlock code from file " + filename + " " + e.getMessage());
             Log.e(getClass().getName(), "Error loading unlock code from file " + filename, e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
         Log.i(getClass().getName(), "Loaded unlock code from ConfigFileStorage.");
 
         String decrypted = encryptedParallel.loadUnlockCode(activity);
         if ((loadedUnlockCode == null && decrypted == null) || (loadedUnlockCode.equals(decrypted))) {
             Log.i(getClass().getName(), "loadUnlockCode : same as encrypted, all ok.");
+            return decrypted;
         } else {
             Log.e(getClass().getName(), "loadUnlockCode : not equal to encrypted, error!.");
+            // migration from 1.0:
+            boolean saveSuccess = false;
+            if (loadedUnlockCode != null) {
+                saveSuccess = encryptedParallel.saveUnlockCode(loadedUnlockCode);
+            }
+            fatal("decryption", "CODE.. this should appear only once! encrypted:" + saveSuccess);
+            return loadedUnlockCode;
         }
-
-        return loadedUnlockCode;
     }
 
     @Override
@@ -114,18 +108,13 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         }
 
         File file = new File(storageDir, filename);
-        BufferedWriter writer = null;
         boolean result = false;
+        String toWrite = selectedUnlockCode == null ? "" : selectedUnlockCode;
         try {
             FileOutputStream fos = new FileOutputStream(file, false);
-            writer = new BufferedWriter(new OutputStreamWriter(new ByteArrayOutputStream()));
-
-            writer.write(selectedUnlockCode == null ? "" : selectedUnlockCode);
-            writer.newLine();
-            writer.flush();
-            writer.close();
+            IOUtils.write(toWrite, fos);
+            fos.flush();
             fos.close();
-
             Log.i(getClass().getName(), "Saved file " + filename + " for code " + selectedUnlockCode);
             result = true;
         } catch (IOException e) {
@@ -189,13 +178,19 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         Log.i(getClass().getName(), "Loaded " + loadedConfig.size() + " entries from ConfigFileStorage.");
 
         List<PasswordEntry> decrypted = encryptedParallel.loadConfigXml(activity);
-        if (loadedConfig.size() != decrypted.size()) {
-            Log.i(getClass().getName(), "loadUnlockCode : same as encrypted, all ok.");
+        if (loadedConfig.size() == decrypted.size()) {
+            Log.i(getClass().getName(), "loadConfigXml : same as encrypted, all ok.");
+            return decrypted;
         } else {
-            Log.e(getClass().getName(), "loadUnlockCode : not equal to encrypted, error!.");
+            Log.e(getClass().getName(), "loadConfigXml : not equal to encrypted, error!.");
+            // migration from 1.0:
+            boolean saveSuccess = false;
+            if (loadedConfig != null) {
+                saveSuccess = encryptedParallel.saveExternalConfigXml(activity, loadedConfig);
+            }
+            fatal("decryption", "CONTENT.. this should appear only once! encrypted:" + saveSuccess);
+            return loadedConfig;
         }
-
-        return loadedConfig;
     }
 
     @Override

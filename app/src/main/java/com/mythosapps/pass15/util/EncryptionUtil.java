@@ -21,14 +21,15 @@ public final class EncryptionUtil {
 
     public static byte[] encrypt(String message) throws Exception {
         SecretKeySpec key = new SecretKeySpec(SALT, "AES");
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION, "SunJCE");
+        //Cipher cipher = Cipher.getInstance(TRANSFORMATION, "SunJCE");
+        Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return cipher.doFinal(message.getBytes(Charset.forName("UTF-8")));
     }
 
     public static String decrypt(byte[] encryptedBytes) throws Exception {
         SecretKeySpec key = new SecretKeySpec(SALT, "AES");
-        Cipher cipher = Cipher.getInstance(TRANSFORMATION, "SunJCE");
+        Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, key);
         return new String(cipher.doFinal(encryptedBytes), Charset.forName("UTF-8"));
     }

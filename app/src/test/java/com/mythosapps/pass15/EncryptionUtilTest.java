@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -48,6 +51,29 @@ public class EncryptionUtilTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testEncryptDecryptFile() throws Exception {
+        String expected = "1111\n222\n333";
+        String actual = null;
+
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("testEncryptDecryptFile", null);
+            FileOutputStream fos = new FileOutputStream(tempFile);
+            EncryptionUtil.writeAndEncrypt(fos, expected);
+
+            FileInputStream fis = new FileInputStream(tempFile);
+            actual = EncryptionUtil.readAndDecrypt(fis);
+        } finally {
+            if (tempFile != null) {
+                tempFile.delete();
+            }
+        }
+
+        assertEquals(expected, actual);
+    }
+
 
     @Test
     public void testEncryptDecryptStreamXML() throws Exception {
