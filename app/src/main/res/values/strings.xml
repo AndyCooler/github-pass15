@@ -14,6 +14,10 @@
     <string name="edit_password_password">Password</string>
     <string name="menu_about">About..</string>
     <string name="new_unlock_code_save_success">Code saved.</string>
+    <string name="new_unlock_code_save_error">Error: Code NOT saved!</string>
     <string name="message_view_set_code">Set your unlock code, left to right..</string>
-    <string name="message_view_enter_code">Enter your code to unlock..</string>
+    <string name="message_view_enter_code_to_unlock">Enter your code to unlock..</string>
+    <string name="verify_code_error">Wrong code, sorry..</string>
+    <string name="message_view_enter_code_to_verify">Enter your code to verify..</string>
+    <string name="unlock_error_wrong_code">Wrong code, sorry..</string>
 </resources>

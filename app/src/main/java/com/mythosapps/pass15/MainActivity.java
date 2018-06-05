@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     // Storage
     private ConfigStorageFacade storage;
     private String loadedUnlockCode = null;
+    private String codeToVerify = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        codeToVerify = null;
         loadedUnlockCode = storage.loadUnlockCode(this);
+        modelToView();
+    }
+
+    private void modelToView() {
         TextView messageView = (TextView) findViewById(R.id.messageView);
-        if (loadedUnlockCode == null) {
-            messageView.setText(R.string.message_view_set_code);
+        if (codeToVerify == null) {
+            if (loadedUnlockCode == null) {
+                messageView.setText(R.string.message_view_set_code);
+            } else {
+                messageView.setText(R.string.message_view_enter_code_to_unlock);
+            }
         } else {
-            messageView.setText(R.string.message_view_enter_code);
+            messageView.setText(R.string.message_view_enter_code_to_verify);
         }
+        clearUnlockCodeSelection();
+    }
+
+    private void clearUnlockCodeSelection() {
+        setTransparent(previousSelectionBeginnTime);
+        setTransparent(previousSelectionBeginn15);
+        setTransparent(previousSelectionEndeTime);
+        setTransparent(previousSelectionEnde15);
+        previousSelectionBeginnTime = null;
+        previousSelectionBeginn15 = null;
+        previousSelectionEndeTime = null;
+        previousSelectionEnde15 = null;
+        beginnTime = null;
+        beginn15 = null;
+        endeTime = null;
+        ende15 = null;
     }
 
     @Override
@@ -68,8 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_change_unlock_pattern) {
-            storage.saveUnlockCode(null);
-            reStartMainActivity();
+            if (loadedUnlockCode == null) {
+                // nothing
+            } else {
+                codeToVerify = loadedUnlockCode;
+                modelToView();
+            }
             return true;
         }
         if (id == R.id.action_about) {
@@ -86,11 +116,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void reStartMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+    //public void reStartMainActivity() {
+    //    Intent intent = new Intent(this, MainActivity.class);
         //intent.putExtra(EXTRA_MESSAGE, withId);
-        startActivity(intent);
-    }
+    //  startActivity(intent);
+    //}
 
     public void verarbeiteKlick(View v) {
         TextView view = (TextView) v;
@@ -163,20 +193,38 @@ public class MainActivity extends AppCompatActivity {
             if (isComplete) {
                 String selectedUnlockCode = "" + beginnTime + beginn15 + endeTime + ende15;
 
-                if (loadedUnlockCode == null) {
-                    if (storage.saveUnlockCode(selectedUnlockCode)) {
-                        Log.i(getClass().getName(), "save unlock code '" + selectedUnlockCode + "' success.");
-                        Toast.makeText(MainActivity.this.getApplicationContext(), R.string.new_unlock_code_save_success, Toast.LENGTH_SHORT).show();
-                        reStartMainActivity();
+                if (codeToVerify == null) {
+                    if (loadedUnlockCode == null) {
+                        if (storage.saveUnlockCode(selectedUnlockCode)) {
+                            Log.i(getClass().getName(), "save unlock code '" + selectedUnlockCode + "' success.");
+                            Toast.makeText(MainActivity.this.getApplicationContext(), R.string.new_unlock_code_save_success, Toast.LENGTH_SHORT).show();
+                            loadedUnlockCode = selectedUnlockCode;
+                            modelToView();
+                        } else {
+                            Log.e(getClass().getName(), "save unlock code '" + selectedUnlockCode + "' failed.");
+                            Toast.makeText(MainActivity.this.getApplicationContext(), R.string.new_unlock_code_save_error, Toast.LENGTH_SHORT).show();
+                            loadedUnlockCode = null;
+                            modelToView();
+                        }
                     } else {
-                        Log.e(getClass().getName(), "save unlock code '" + selectedUnlockCode + "' failed.");
-                        loadedUnlockCode = null;
+                        Log.i(getClass().getName(), "unlock trying with code '" + selectedUnlockCode + "'");
+                        if (selectedUnlockCode.equals(loadedUnlockCode)) {
+                            startPasswordsEditorActivity();
+                        } else {
+                            Toast.makeText(MainActivity.this.getApplicationContext(), R.string.unlock_error_wrong_code, Toast.LENGTH_SHORT).show();
+                            modelToView();
+                        }
                     }
                 } else {
-                    Log.i(getClass().getName(), "unlock trying with code '" + selectedUnlockCode + "'");
-                    if (selectedUnlockCode.equals(loadedUnlockCode)) {
-                        startPasswordsEditorActivity();
+                    if (codeToVerify.equals(selectedUnlockCode)) {
+                        // user can enter new code..
+                        loadedUnlockCode = null;
+                        storage.saveUnlockCode(null);
+                    } else {
+                        Toast.makeText(MainActivity.this.getApplicationContext(), R.string.verify_code_error, Toast.LENGTH_SHORT).show();
                     }
+                    codeToVerify = null;
+                    modelToView();
                 }
             }
         }

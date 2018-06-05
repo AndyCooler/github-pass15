@@ -90,7 +90,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
             if (loadedUnlockCode != null) {
                 saveSuccess = encryptedParallel.saveUnlockCode(loadedUnlockCode);
             }
-            fatal("decryption", "CODE.. this should appear only once! encrypted:" + saveSuccess);
+            fatal("decryption", "Migrate to encrypted unlock code:" + saveSuccess);
             return loadedUnlockCode;
         }
     }
@@ -188,7 +188,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
             if (loadedConfig != null) {
                 saveSuccess = encryptedParallel.saveExternalConfigXml(activity, loadedConfig);
             }
-            fatal("decryption", "CONTENT.. this should appear only once! encrypted:" + saveSuccess);
+            fatal("decryption", "Migrate to encrypted content:" + saveSuccess);
             return loadedConfig;
         }
     }
