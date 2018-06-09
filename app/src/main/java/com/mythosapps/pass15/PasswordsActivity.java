@@ -18,6 +18,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mythosapps.pass15.storage.ConfigFileStorage;
 import com.mythosapps.pass15.storage.ConfigStorageFacade;
 import com.mythosapps.pass15.storage.StorageFactory;
 import com.mythosapps.pass15.types.ColorsUI;
@@ -44,6 +45,7 @@ public class PasswordsActivity extends AppCompatActivity {
     List<PasswordEntry> list = null;
     private Random random = new Random();
     private boolean isPaused;
+    private ConfigStorageFacade plainTextStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class PasswordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_passwords);
 
         storage = StorageFactory.getConfigStorage();
+        plainTextStorage = StorageFactory.getConfigStorage(); //TODO separate storage classes
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMonth);
         setSupportActionBar(toolbar);
@@ -210,6 +213,10 @@ public class PasswordsActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_export) {
+            plainTextStorage.saveExternalConfigXml(this, list);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

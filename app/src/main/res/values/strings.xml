@@ -20,4 +20,5 @@
     <string name="verify_code_error">Wrong code, sorry..</string>
     <string name="message_view_enter_code_to_verify">Enter your code to verify..</string>
     <string name="unlock_error_wrong_code">Wrong code, sorry..</string>
+    <string name="menu_export">Export</string>
 </resources>
