@@ -1,6 +1,8 @@
 package com.mythosapps.pass15.types;
 
 
+import com.mythosapps.pass15.util.ConfigXmlParser;
+
 import java.util.List;
 
 /**
@@ -131,12 +133,12 @@ public class PasswordEntry {
 
     public String toXmlConfig() {
         return "    <entry>\n" +
-                "        <category>" + getCategory() + "</category>\n" +
-                "        <name>" + getName() + "</name>\n" +
-                "        <username>" + getUsername() + "</username>\n" +
-                "        <password>" + getPassword() + "</password>\n" +
-                "        <created>" + getCreated() + "</created>\n" +
-                "        <lastModified>" + getLastModified() + "</lastModified>\n" +
+                "        <category>" + ConfigXmlParser.escapeTextValue(getCategory()) + "</category>\n" +
+                "        <name>" + ConfigXmlParser.escapeTextValue(getName()) + "</name>\n" +
+                "        <username>" + ConfigXmlParser.escapeTextValue(getUsername()) + "</username>\n" +
+                "        <password>" + ConfigXmlParser.escapeTextValue(getPassword()) + "</password>\n" +
+                "        <created>" + ConfigXmlParser.escapeTextValue(getCreated()) + "</created>\n" +
+                "        <lastModified>" + ConfigXmlParser.escapeTextValue(getLastModified()) + "</lastModified>\n" +
                 "    </entry>\n";
     }
 }

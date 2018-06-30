@@ -54,7 +54,8 @@ public class EncryptionUtilTest {
 
     @Test
     public void testEncryptDecryptFile() throws Exception {
-        String expected = "1111\n222\n333";
+        //String expected = "1111\n222\n333";
+        String expected = "1111\n222\n!\"%&/()=?}ß§&/3\\&3";
         String actual = null;
 
         File tempFile = null;
@@ -70,6 +71,11 @@ public class EncryptionUtilTest {
                 tempFile.delete();
             }
         }
+
+        System.out.println("testEncryptDecryptFile expected:'" + expected+ "'");
+
+        System.out.println("testEncryptDecryptFile actual  :'" + actual + "'");
+
 
         assertEquals(expected, actual);
     }

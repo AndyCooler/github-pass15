@@ -65,7 +65,7 @@ public class ConfigXmlParser {
             result.add(task);
         }
 
-        Log.i("Info:", "Parsed " + result.size() + " elements.");
+        //Log.i("Info:", "Parsed " + result.size() + " elements.");
 
         return result;
     }
@@ -127,5 +127,25 @@ public class ConfigXmlParser {
             }
         }
         return "";
+    }
+
+    /**
+     * The Character data section of the XML Spec says
+     * "The ampersand character (&) and the left angle bracket (<) must not appear in their
+     * literal form, except when used as markup delimiters, or within a comment, a
+     * processing instruction, or a CDATA section. If they are needed elsewhere,
+     * they must be escaped using either numeric character references or the strings
+     * "&amp;" and "&lt;" respectively."
+     *
+     * @param value a value
+     * @return value with special chararcters escaped so that #getTextNodeValue can unescape and return the
+     * value
+     */
+    public static String escapeTextValue(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;");
     }
 }
