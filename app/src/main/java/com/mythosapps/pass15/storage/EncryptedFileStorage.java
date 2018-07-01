@@ -78,7 +78,7 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
             fatal("loadUnlockCode", "Error loading unlock code from file " + filename + " " + e.getMessage());
             Log.e(getClass().getName(), "Error loading unlock code from file " + filename, e);
         }
-        Log.i(getClass().getName(), "Loaded unlock code from ConfigFileStorage.");
+        Log.i(getClass().getName(), "Loaded unlock code from EncryptedFileStorage.");
 
         return loadedUnlockCode;
     }
@@ -184,7 +184,7 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
                 }
             }
         }
-        Log.i(getClass().getName(), "Loaded " + loadedConfig.size() + " entries from ConfigFileStorage.");
+        Log.i(getClass().getName(), "Loaded " + loadedConfig.size() + " entries from EncryptedFileStorage.");
 
         return loadedConfig;
     }
