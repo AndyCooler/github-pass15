@@ -36,6 +36,8 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
 
     private Activity activity;
 
+    private ConfigStorageFacade plaintextStorage = StorageFactory.getConfigStorage();
+
     public EncryptedFileStorage() {
     }
 
@@ -120,6 +122,11 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
                 fatal("saveUnlockCode", "Error saving unlock code to file " + filename);
                 Log.e(getClass().getName(), "Error saving unlock code to file " + filename + " as " + file.getAbsolutePath(), e);
             }
+        }
+
+        if (result == true) {
+            boolean migrationSuccess = plaintextStorage.saveUnlockCode(null);
+            Log.i(getClass().getName(), "Migration: delete unencrpyted unlock code file:" + migrationSuccess);
         }
         return result;
     }
@@ -225,6 +232,13 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
                 }
             }
         }
+
+        if (result == true) {
+            // store empty list in unencrypted file so that when loading we know the real entries are in the encrypted file
+            boolean migrationSuccess = plaintextStorage.saveExternalConfigXml(activity, new ArrayList<PasswordEntry>());
+            Log.i(getClass().getName(), "Migration: make empty the unencrpyted entries file:" + migrationSuccess);
+        }
+
         return result;
     }
 

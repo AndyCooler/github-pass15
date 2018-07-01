@@ -2,8 +2,6 @@ package com.mythosapps.pass15;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Integer previousSelectionEnde15 = null; //viewId
 
     // Storage
-    private ConfigStorageFacade storage;
+    private ConfigStorageFacade plaintextStorage;
+    private ConfigStorageFacade encryptedStorage;
     private String loadedUnlockCode = null;
     private String codeToVerify = null;
 
@@ -41,14 +40,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Unlock..");
-        storage = StorageFactory.getConfigStorage();
+        plaintextStorage = StorageFactory.getConfigStorage();
+        encryptedStorage = StorageFactory.getEncryptedStorage();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         codeToVerify = null;
-        loadedUnlockCode = storage.loadUnlockCode(this);
+        loadedUnlockCode = encryptedStorage.loadUnlockCode(this);
+        // migrate from version with unencrypted plaintextStorage
+        if (loadedUnlockCode == null) {
+            loadedUnlockCode = plaintextStorage.loadUnlockCode(this);
+            if (loadedUnlockCode != null) {
+                boolean migrationSuccess = encryptedStorage.saveUnlockCode(loadedUnlockCode);
+                Log.i(getClass().getName(), "migration for unlock code '" + loadedUnlockCode + "' success:" + migrationSuccess);
+            }
+        }
         modelToView();
     }
 
@@ -195,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (codeToVerify == null) {
                     if (loadedUnlockCode == null) {
-                        if (storage.saveUnlockCode(selectedUnlockCode)) {
+                        if (encryptedStorage.saveUnlockCode(selectedUnlockCode)) {
                             Log.i(getClass().getName(), "save unlock code '" + selectedUnlockCode + "' success.");
                             Toast.makeText(MainActivity.this.getApplicationContext(), R.string.new_unlock_code_save_success, Toast.LENGTH_SHORT).show();
                             loadedUnlockCode = selectedUnlockCode;
@@ -219,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     if (codeToVerify.equals(selectedUnlockCode)) {
                         // user can enter new code..
                         loadedUnlockCode = null;
-                        storage.saveUnlockCode(null);
+                        encryptedStorage.saveUnlockCode(null);
                     } else {
                         Toast.makeText(MainActivity.this.getApplicationContext(), R.string.verify_code_error, Toast.LENGTH_SHORT).show();
                     }

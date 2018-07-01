@@ -18,12 +18,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mythosapps.pass15.storage.ConfigFileStorage;
 import com.mythosapps.pass15.storage.ConfigStorageFacade;
 import com.mythosapps.pass15.storage.StorageFactory;
 import com.mythosapps.pass15.types.ColorsUI;
 import com.mythosapps.pass15.types.PasswordEntry;
-import com.mythosapps.pass15.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +37,13 @@ public class PasswordsActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.mythosapps.pass15.MESSAGE";
 
     // Storage
-    private ConfigStorageFacade storage;
+    private ConfigStorageFacade plaintextStorage;
+    private ConfigStorageFacade encryptedStorage;
 
     // View state and view state management
     List<PasswordEntry> list = null;
     private Random random = new Random();
     private boolean isPaused;
-    private ConfigStorageFacade plainTextStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +54,8 @@ public class PasswordsActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_passwords);
 
-        storage = StorageFactory.getConfigStorage();
-        plainTextStorage = StorageFactory.getConfigStorage(); //TODO separate storage classes
+        encryptedStorage = StorageFactory.getEncryptedStorage();
+        plaintextStorage = StorageFactory.getConfigStorage();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarMonth);
         setSupportActionBar(toolbar);
@@ -116,9 +114,16 @@ public class PasswordsActivity extends AppCompatActivity {
 
         String previousCategory = null;
 
-        //list = storage.loadConfigXml(this);
         list = new ArrayList<>();
-        List<PasswordEntry> loadedUnsortedList = storage.loadConfigXml(this);
+        List<PasswordEntry> loadedUnsortedList = encryptedStorage.loadConfigXml(this);
+        // migrate from version with unencrypted plaintextStorage
+        if (loadedUnsortedList.isEmpty()) {
+            loadedUnsortedList = plaintextStorage.loadConfigXml(this);
+            if (!loadedUnsortedList.isEmpty()) {
+                boolean migrationSuccess = encryptedStorage.saveExternalConfigXml(this, loadedUnsortedList);
+                Log.i(getClass().getName(), "migration for entries success:" + migrationSuccess);
+            }
+        }
 
         // Migrate old data:
         for (final PasswordEntry data : loadedUnsortedList) {
@@ -214,7 +219,7 @@ public class PasswordsActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_export) {
-            plainTextStorage.saveExternalConfigXml(this, list);
+            plaintextStorage.saveExternalConfigXml(this, list);
             return true;
         }
 
@@ -241,7 +246,7 @@ public class PasswordsActivity extends AppCompatActivity {
                     return;
                 }
                 PasswordEntry.addEntryToCategory(list, entry);
-                storage.saveExternalConfigXml(PasswordsActivity.this, list);
+                encryptedStorage.saveExternalConfigXml(PasswordsActivity.this, list);
                 initialize();
             }
         });
@@ -259,7 +264,7 @@ public class PasswordsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 PasswordEntry.replaceByNameCat(list, taskUI.getEntry(), oldName, oldCategory); // applies changes from UI
-                storage.saveExternalConfigXml(PasswordsActivity.this, list);
+                encryptedStorage.saveExternalConfigXml(PasswordsActivity.this, list);
                 initialize();
             }
         });

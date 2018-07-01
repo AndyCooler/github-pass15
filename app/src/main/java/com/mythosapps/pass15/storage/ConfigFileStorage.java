@@ -37,8 +37,6 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
 
     private ConfigXmlParser parser = new ConfigXmlParser();
 
-    EncryptedFileStorage encryptedParallel = new EncryptedFileStorage();
-
     private Activity activity;
 
     public ConfigFileStorage() {
@@ -81,20 +79,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         }
         Log.i(getClass().getName(), "Loaded unlock code from ConfigFileStorage.");
 
-        String decrypted = encryptedParallel.loadUnlockCode(activity);
-        if ((loadedUnlockCode == null && decrypted == null) || (loadedUnlockCode.equals(decrypted))) {
-            Log.i(getClass().getName(), "loadUnlockCode : same as encrypted, all ok.");
-            return decrypted;
-        } else {
-            Log.e(getClass().getName(), "loadUnlockCode : not equal to encrypted, error!.");
-            // migration from 1.0:
-            boolean saveSuccess = false;
-            if (loadedUnlockCode != null) {
-                saveSuccess = encryptedParallel.saveUnlockCode(loadedUnlockCode);
-            }
-            fatal("decryption", "Migrate to encrypted unlock code:" + saveSuccess);
-            return loadedUnlockCode;
-        }
+        return loadedUnlockCode;
     }
 
     @Override
@@ -122,9 +107,6 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         } catch (IOException e) {
             fatal("saveUnlockCode", "Error saving unlock code to file " + filename);
             Log.e(getClass().getName(), "Error saving unlock code to file " + filename + " as " + file.getAbsolutePath(), e);
-        }
-        if (result == true) {
-            encryptedParallel.saveUnlockCode(selectedUnlockCode);
         }
         return result;
     }
@@ -178,21 +160,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
             }
         }
         Log.i(getClass().getName(), "Loaded " + loadedConfig.size() + " entries from ConfigFileStorage.");
-
-        List<PasswordEntry> decrypted = encryptedParallel.loadConfigXml(activity);
-        if (loadedConfig.size() == decrypted.size()) {
-            Log.i(getClass().getName(), "loadConfigXml : same as encrypted, all ok.");
-            return decrypted;
-        } else {
-            Log.e(getClass().getName(), "loadConfigXml : not equal to encrypted, error!.");
-            // migration from 1.0:
-            boolean saveSuccess = false;
-            if (loadedConfig != null) {
-                saveSuccess = encryptedParallel.saveExternalConfigXml(activity, loadedConfig);
-            }
-            fatal("decryption", "Migrate to encrypted content:" + saveSuccess);
-            return loadedConfig;
-        }
+        return loadedConfig;
     }
 
     @Override
@@ -225,10 +193,6 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         } catch (IOException e) {
             fatal("saveExternalConfigXml", "Error saving file " + filename);
             Log.e(getClass().getName(), "Error saving file " + filename + " as " + file.getAbsolutePath(), e);
-        }
-
-        if (result == true) {
-            encryptedParallel.saveExternalConfigXml(activity, tasks);
         }
 
         return result;
