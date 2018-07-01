@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mythosapps.pass15.PasswordsActivity;
 import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.ConfigXmlParser;
 
@@ -164,9 +165,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
     }
 
     @Override
-    public boolean saveExternalConfigXml(Activity activity, List<PasswordEntry> tasks) {
-        String filename = DEFAULT_CONFIG_FILE;
-
+    public boolean exportConfigXml(Activity activity, List<PasswordEntry> list, String filename) {
         this.activity = activity;
 
         if (!initialized && !init()) {
@@ -180,7 +179,7 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
 
             PrintWriter pw = new PrintWriter(fos);
             pw.println(XML_PROLOG);
-            for (PasswordEntry task : tasks) {
+            for (PasswordEntry task : list) {
                 pw.println(task.toXmlConfig());
             }
             pw.println(XML_END);
@@ -196,6 +195,12 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
         }
 
         return result;
+    }
+
+    @Override
+    public boolean saveExternalConfigXml(Activity activity, List<PasswordEntry> tasks) {
+        String filename = DEFAULT_CONFIG_FILE;
+        return exportConfigXml(activity, tasks, filename);
     }
 
     // Storage Permissions

@@ -122,6 +122,9 @@ public class PasswordsActivity extends AppCompatActivity {
             if (!loadedUnsortedList.isEmpty()) {
                 boolean migrationSuccess = encryptedStorage.saveExternalConfigXml(this, loadedUnsortedList);
                 Log.i(getClass().getName(), "migration for entries success:" + migrationSuccess);
+                if (migrationSuccess) {
+
+                }
             }
         }
 
@@ -219,7 +222,11 @@ public class PasswordsActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_export) {
-            plaintextStorage.saveExternalConfigXml(this, list);
+            String filename = "Pass15.export.xml";
+            if (plaintextStorage.exportConfigXml(this, list, filename)) {
+                Toast.makeText(PasswordsActivity.this.getApplicationContext(), R.string.export_success, Toast.LENGTH_LONG).show();
+            }
+
             return true;
         }
 

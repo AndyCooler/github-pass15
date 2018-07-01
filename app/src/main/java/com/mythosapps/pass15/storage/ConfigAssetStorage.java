@@ -94,4 +94,9 @@ public class ConfigAssetStorage implements ConfigStorageFacade {
         unlockCode = selectedUnlockCode;
         return true;
     }
+
+    @Override
+    public boolean exportConfigXml(Activity passwordsActivity, List<PasswordEntry> list, String filename) {
+        return false;
+    }
 }

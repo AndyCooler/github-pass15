@@ -131,6 +131,11 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
         return result;
     }
 
+    @Override
+    public boolean exportConfigXml(Activity passwordsActivity, List<PasswordEntry> list, String filename) {
+        return false; // TODO move export method from config storage to here
+    }
+
     /**
      * Load config from external XML file {@link #DEFAULT_CONFIG_FILE} if present. Loaded
      * tasks are activated as a side effect. In addition, returns a list of tasks from app storage

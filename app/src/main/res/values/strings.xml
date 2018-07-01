@@ -21,4 +21,5 @@
     <string name="message_view_enter_code_to_verify">Enter your code to verify..</string>
     <string name="unlock_error_wrong_code">Wrong code, sorry..</string>
     <string name="menu_export">Export</string>
+    <string name="export_success">Export successful: Documents/Pass15.export.xml</string>
 </resources>

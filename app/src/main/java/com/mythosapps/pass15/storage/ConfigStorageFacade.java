@@ -2,6 +2,7 @@ package com.mythosapps.pass15.storage;
 
 import android.app.Activity;
 
+import com.mythosapps.pass15.PasswordsActivity;
 import com.mythosapps.pass15.types.PasswordEntry;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface ConfigStorageFacade {
     boolean saveExternalConfigXml(Activity activity, List<PasswordEntry> tasks);
 
     boolean saveUnlockCode(String selectedUnlockCode);
+
+    boolean exportConfigXml(Activity passwordsActivity, List<PasswordEntry> list, String filename);
 }
