@@ -42,9 +42,12 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
     public String loadUnlockCode(Activity activity) {
         this.activity = activity;
 
-        //TODO verifyStoragePermissions(activity);
-
         String loadedUnlockCode = null;
+
+        if (!verifyStoragePermissions(activity)) {
+            fatal("loadUnlockCode", "Grant permissions to access unlock file.");
+            return loadedUnlockCode;
+        }
 
         String filename = UNLOCK_CODE_CONFIG_FILE;
 
@@ -84,7 +87,12 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
 
         this.activity = activity;
 
-        //TODO verifyStoragePermissions(activity);
+        String loadedUnlockCode = null;
+
+        if (!verifyStoragePermissions(activity)) {
+            fatal("saveUnlockCode", "Grant permissions to access unlock file.");
+            return false;
+        }
 
         if (!initialized && !init()) {
             return false;
@@ -130,9 +138,12 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
 
         this.activity = activity;
 
-        verifyStoragePermissions(activity);
-
         List<PasswordEntry> loadedConfig = new ArrayList<PasswordEntry>();
+
+        if (!verifyStoragePermissions(activity)) {
+            fatal("loadConfigXml", "Grant permissions to access file.");
+            return loadedConfig;
+        }
 
         String filename = DEFAULT_CONFIG_FILE;
 
@@ -176,6 +187,11 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
         String filename = DEFAULT_CONFIG_FILE;
 
         this.activity = activity;
+
+        if (!verifyStoragePermissions(activity)) {
+            fatal("saveExternalConfigXml", "Grant permissions to access file.");
+            return false;
+        }
 
         if (!initialized && !init()) {
             return false;
@@ -226,20 +242,24 @@ public class EncryptedFileStorage extends FileStorage implements ConfigStorageFa
      *
      * @param activity
      */
-    public static void verifyStoragePermissions(Activity activity) {
+    public static boolean verifyStoragePermissions(Activity activity) {
+
+        boolean permissionsGranted = false;
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            permissionsGranted = true;
+        } else {
+            // Prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+        return permissionsGranted;
     }
-
 
     private void fatal(String method, String msg) {
         Log.e(getClass().getName(), method + " : " + msg);

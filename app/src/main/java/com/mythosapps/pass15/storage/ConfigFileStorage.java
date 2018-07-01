@@ -46,10 +46,12 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
 
     public String loadUnlockCode(Activity activity) {
         this.activity = activity;
-
-        verifyStoragePermissions(activity);
-
         String loadedUnlockCode = null;
+
+        if (!verifyStoragePermissions(activity)) {
+            fatal("loadUnlockCode", "Grant permissions to access unlock file.");
+            return loadedUnlockCode;
+        }
 
         String filename = UNLOCK_CODE_CONFIG_FILE;
 
@@ -241,25 +243,29 @@ public class ConfigFileStorage extends FileStorage implements ConfigStorageFacad
 
     /**
      * Checks if the app has permission to write to device storage
-     *
+     * <p>
      * If the app does not has permission then the user will be prompted to grant permissions
      *
      * @param activity
      */
-    public static void verifyStoragePermissions(Activity activity) {
+    public static boolean verifyStoragePermissions(Activity activity) {
+
+        boolean permissionsGranted = false;
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            permissionsGranted = true;
+        } else {
+            // Prompt the user
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+        return permissionsGranted;
     }
-
 
 
     private void fatal(String method, String msg) {
