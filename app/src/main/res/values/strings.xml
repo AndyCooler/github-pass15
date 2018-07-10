@@ -2,12 +2,12 @@
     <string name="app_name">Pass15</string>
     <string name="menu_change_unlock_pattern">Change unlock pattern</string>
     <string name="menu_lock_screen">Lock screen</string>
-    <string name="new_password_title">New Password</string>
-    <string name="new_password_new_button">New</string>
+    <string name="new_password_title">New password details</string>
+    <string name="new_password_new_button">Save</string>
     <string name="new_password_cancel_button">Cancel</string>
-    <string name="new_password_error_exists">Entry already there!</string>
-    <string name="edit_password_edit_button">Edit Password</string>
-    <string name="edit_password_title">Edit Password</string>
+    <string name="new_password_error_exists">Entry already exists!</string>
+    <string name="edit_password_edit_button">Save</string>
+    <string name="edit_password_title">Password details</string>
     <string name="edit_password_category">Category</string>
     <string name="edit_password_site">Site</string>
     <string name="edit_password_username">Username</string>
