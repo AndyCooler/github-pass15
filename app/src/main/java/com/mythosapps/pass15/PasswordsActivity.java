@@ -123,7 +123,7 @@ public class PasswordsActivity extends AppCompatActivity {
                 boolean migrationSuccess = encryptedStorage.saveExternalConfigXml(this, loadedUnsortedList);
                 Log.i(getClass().getName(), "migration for entries success:" + migrationSuccess);
                 if (migrationSuccess) {
-
+                    // TODO delete old unencrypted files instead of emptying them
                 }
             }
         }
