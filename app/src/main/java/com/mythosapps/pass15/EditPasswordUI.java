@@ -5,17 +5,28 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.DateUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mythosapps.pass15.R.style.Theme_AppCompat_Light_Dialog;
 
 public class EditPasswordUI {
 
@@ -29,16 +40,14 @@ public class EditPasswordUI {
     private EditText usernameTextField;
     private EditText passwordTextField;
     private PasswordEntry existingEntry;
-    private boolean show;
 
-    public EditPasswordUI(Activity parent, String title, PasswordEntry entry, boolean show) {
+    public EditPasswordUI(Activity parent, String title, PasswordEntry entry) {
         this.parent = parent;
         this.title = title;
         this.existingEntry = entry;
         if (existingEntry == null) {
             existingEntry = new PasswordEntry("","","","", null, null);
         }
-        this.show = show;
     }
 
     public void setOkButton(String okButtonText, DialogInterface.OnClickListener okButtonListener) {
@@ -88,75 +97,92 @@ public class EditPasswordUI {
         usernameTextField.setText(existingEntry.getUsername());
         usernameTextField.setSelection(0, existingEntry.getUsername().length());
         usernameTextField.setEnabled(true);
+        usernameTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_copy_black_24dp, 0);
         TextView usernameLabel = new TextView(parent);
         usernameLabel.setText(R.string.edit_password_username);
         linearLayout.addView(usernameLabel);
 
-        LinearLayout userNamelinearLayout = new LinearLayout(parent);
-        userNamelinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        userNamelinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        userNamelinearLayout.addView(usernameTextField);
-        Button bt = new Button(parent);
-        bt.setGravity(1);
-        bt.setText("Copy");
-        bt.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        bt.setOnClickListener(new View.OnClickListener() {
+        usernameTextField.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) parent.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("user name", usernameTextField.getText());
-                clipboard.setPrimaryClip(clip);
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (usernameTextField.getRight() - usernameTextField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        ClipboardManager clipboard = (ClipboardManager) parent.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("username", usernameTextField.getText());
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(parent.getApplicationContext(), "Username copied.", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                }
+                return false;
             }
         });
-        userNamelinearLayout.addView(bt);
-        linearLayout.addView(userNamelinearLayout);
+        linearLayout.addView(usernameTextField);
 
         passwordTextField = new EditText(parent);
-        int mode = show ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL : InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_PASSWORD;
-        passwordTextField.setInputType(mode);
+        passwordTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordTextField.setText(existingEntry.getPassword());
         passwordTextField.setSelection(0, existingEntry.getPassword().length());
         passwordTextField.setEnabled(true);
-        passwordTextField.setGravity(4);
+        passwordTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_copy_black_24dp, 0);
         TextView passwordLabel = new TextView(parent);
         passwordLabel.setText(R.string.edit_password_password);
         linearLayout.addView(passwordLabel);
 
-        LinearLayout passwordlinearLayout = new LinearLayout(parent);
-        passwordlinearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
-        passwordlinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        passwordlinearLayout.addView(passwordTextField);
-        Button btPwd = new Button(parent);
-        btPwd.setGravity(1);
-        btPwd.setText("Copy");
-        btPwd.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        btPwd.setOnClickListener(new View.OnClickListener() {
+        passwordTextField.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) parent.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("password", passwordTextField.getText());
-                clipboard.setPrimaryClip(clip);
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (passwordTextField.getRight() - passwordTextField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        ClipboardManager clipboard = (ClipboardManager) parent.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("password", passwordTextField.getText());
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(parent.getApplicationContext(), "Password copied.", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                }
+                return false;
             }
         });
-        passwordlinearLayout.addView(btPwd);
-        linearLayout.addView(passwordlinearLayout);
+        linearLayout.addView(passwordTextField);
 
         builder.setView(linearLayout);
 
 
         builder.setPositiveButton(okButtonText, okButtonListener);
-        builder.setNeutralButton(cancelButtonText, new DialogInterface.OnClickListener() {
+        //builder.setNeutralButtonIcon(parent.getDrawable(R.drawable.ic_visibility_black_24dp)); requires API22
+        builder.setNeutralButton("Show/Hide", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing! Trick, muss gesetzt werden und nach dialog.show dann überschieben werden
+            }
+        });
+        builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
+        final List<String> list = new ArrayList<String>();
 
         final AlertDialog dialog = builder.show();
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (list.isEmpty()) {
+                    passwordTextField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    list.add("1");
+                } else {
+                    passwordTextField.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    list.clear();
+                }
+            }
+        });
     }
 
     public PasswordEntry getEntry() {

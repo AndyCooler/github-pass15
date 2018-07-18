@@ -240,7 +240,7 @@ public class PasswordsActivity extends AppCompatActivity {
     }
 
     public void menuNewTask() {
-        final EditPasswordUI taskUI = new EditPasswordUI(this, getString(R.string.new_password_title), null, false);
+        final EditPasswordUI taskUI = new EditPasswordUI(this, getString(R.string.new_password_title), null);
 
         taskUI.setOkButton(getString(R.string.new_password_new_button), new DialogInterface.OnClickListener() {
 
@@ -264,7 +264,7 @@ public class PasswordsActivity extends AppCompatActivity {
     public void menuEditTask(PasswordEntry data) {
         final String oldName = data.getName();
         final String oldCategory = data.getCategory();
-        final EditPasswordUI taskUI = new EditPasswordUI(this, getString(R.string.edit_password_title), data, true);
+        final EditPasswordUI taskUI = new EditPasswordUI(this, getString(R.string.edit_password_title), data);
 
         taskUI.setOkButton(getString(R.string.edit_password_edit_button), new DialogInterface.OnClickListener() {
 
