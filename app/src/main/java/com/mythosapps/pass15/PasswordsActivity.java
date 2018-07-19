@@ -23,6 +23,7 @@ import com.mythosapps.pass15.storage.StorageFactory;
 import com.mythosapps.pass15.types.ColorsUI;
 import com.mythosapps.pass15.types.PasswordEntry;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +44,8 @@ public class PasswordsActivity extends AppCompatActivity {
     // View state and view state management
     List<PasswordEntry> list = null;
     private Random random = new Random();
-    private boolean isPaused;
+    private static boolean isPaused;
+    private static Timestamp lastUserActivity = new Timestamp(System.currentTimeMillis());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +87,15 @@ public class PasswordsActivity extends AppCompatActivity {
         super.onResume();
         Log.i(getClass().getName(), "onResume() started");
 
-        if (isPaused) {
+        // lock automatically after 30 seconds
+        Timestamp back10sec = new Timestamp(System.currentTimeMillis() - 30 * 1000);
+        if (isPaused && back10sec.after(lastUserActivity)) {
             startMainActivity();
-            isPaused = false;
         } else {
             initialize();
         }
+        isPaused = false;
+        lastUserActivity = new Timestamp(System.currentTimeMillis());
 
         Log.i(getClass().getName(), "onResume() finished.");
     }
@@ -99,6 +104,7 @@ public class PasswordsActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         isPaused = true;
+        lastUserActivity = new Timestamp(System.currentTimeMillis());
     }
 
     private void initialize() {
