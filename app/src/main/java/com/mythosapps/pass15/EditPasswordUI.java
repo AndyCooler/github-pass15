@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -20,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mythosapps.pass15.types.ColorsUI;
 import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.DateUtil;
 
@@ -64,7 +67,7 @@ public class EditPasswordUI {
     }
 
     private void initializeUI() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(parent);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(parent, R.style.AlertDialogEditPasswordUI);
         builder.setTitle(title);
 
         LinearLayout linearLayout = new LinearLayout(parent);
@@ -77,8 +80,13 @@ public class EditPasswordUI {
         categoryTextField.setText(existingEntry.getCategory());
         categoryTextField.setSelection(0, existingEntry.getCategory().length());
         categoryTextField.setEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            categoryTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.DARK_BLUE_DEFAULT ) );
+        }
+
         TextView categoryLabel = new TextView(parent);
         categoryLabel.setText(R.string.edit_password_category);
+        categoryLabel.setPadding(10, 0, 0, 0);
         linearLayout.addView(categoryLabel);
         linearLayout.addView(categoryTextField);
 
@@ -87,8 +95,13 @@ public class EditPasswordUI {
         nameTextField.setText(existingEntry.getName());
         nameTextField.setSelection(0, existingEntry.getName().length());
         nameTextField.setEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            nameTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.DARK_BLUE_DEFAULT ) );
+        }
+
         TextView nameLabel = new TextView(parent);
         nameLabel.setText(R.string.edit_password_site);
+        nameLabel.setPadding(10, 0, 0, 0);
         linearLayout.addView(nameLabel);
         linearLayout.addView(nameTextField);
 
@@ -97,9 +110,13 @@ public class EditPasswordUI {
         usernameTextField.setText(existingEntry.getUsername());
         usernameTextField.setSelection(0, existingEntry.getUsername().length());
         usernameTextField.setEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            usernameTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.SELECTION_BG ) );
+        }
         usernameTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_copy_black_24dp, 0);
         TextView usernameLabel = new TextView(parent);
         usernameLabel.setText(R.string.edit_password_username);
+        usernameLabel.setPadding(10, 0, 0, 0);
         linearLayout.addView(usernameLabel);
 
         usernameTextField.setOnTouchListener(new View.OnTouchListener() {
@@ -127,8 +144,12 @@ public class EditPasswordUI {
         passwordTextField.setSelection(0, existingEntry.getPassword().length());
         passwordTextField.setEnabled(true);
         passwordTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_copy_black_24dp, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            passwordTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.SELECTION_BG ) );
+        }
         TextView passwordLabel = new TextView(parent);
         passwordLabel.setText(R.string.edit_password_password);
+        passwordLabel.setPadding(10, 0, 0, 0);
         linearLayout.addView(passwordLabel);
 
         passwordTextField.setOnTouchListener(new View.OnTouchListener() {
