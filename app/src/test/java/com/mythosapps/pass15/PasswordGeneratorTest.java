@@ -9,7 +9,9 @@ import static junit.framework.Assert.assertEquals;
 public class PasswordGeneratorTest {
 
     @Test
-    public void testEncryptDecrypt() throws Exception {
-        assertEquals(16, PasswordGenerator.generate().length());
+    public void testGenerate() throws Exception {
+        for (int i = 0; i < 10000; i++) {
+            assertEquals(16, PasswordGenerator.generate().length());
+        }
     }
 }
