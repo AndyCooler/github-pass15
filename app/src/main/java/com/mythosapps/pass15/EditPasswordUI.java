@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.mythosapps.pass15.types.ColorsUI;
 import com.mythosapps.pass15.types.PasswordEntry;
 import com.mythosapps.pass15.util.DateUtil;
+import com.mythosapps.pass15.util.PasswordGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +44,14 @@ public class EditPasswordUI {
     private EditText usernameTextField;
     private EditText passwordTextField;
     private PasswordEntry existingEntry;
+    private boolean isCreatingNewEntry;
 
     public EditPasswordUI(Activity parent, String title, PasswordEntry entry) {
         this.parent = parent;
         this.title = title;
         this.existingEntry = entry;
         if (existingEntry == null) {
+            isCreatingNewEntry = true;
             existingEntry = new PasswordEntry("","","","", null, null);
         }
     }
@@ -176,12 +179,19 @@ public class EditPasswordUI {
 
         builder.setPositiveButton(okButtonText, okButtonListener);
         //builder.setNeutralButtonIcon(parent.getDrawable(R.drawable.ic_visibility_black_24dp)); requires API22
-        builder.setNeutralButton("Show/Hide", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // do nothing! Trick, muss gesetzt werden und nach dialog.show dann überschieben werden
-            }
-        });
+        if (isCreatingNewEntry) {
+            builder.setNeutralButton(R.string.edit_password_generate_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing! Trick, muss gesetzt werden und nach dialog.show dann überschieben werden
+                }});
+        } else {
+            builder.setNeutralButton(R.string.edit_password_show_hide_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing! Trick, muss gesetzt werden und nach dialog.show dann überschieben werden
+                }});
+        }
         builder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -194,13 +204,18 @@ public class EditPasswordUI {
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (list.isEmpty()) {
-                    passwordTextField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    list.add("1");
+                if (isCreatingNewEntry) {
+                    passwordTextField.setText(PasswordGenerator.generate());
+                     ((Button) v).setText(R.string.edit_password_show_hide_button);
+                    isCreatingNewEntry = false;
                 } else {
-                    passwordTextField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    list.clear();
+                    if (list.isEmpty()) {
+                        passwordTextField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        list.add("1");
+                    } else {
+                        passwordTextField.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        list.clear();
+                    }
                 }
             }
         });
