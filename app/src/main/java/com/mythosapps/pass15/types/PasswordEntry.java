@@ -46,6 +46,23 @@ public class PasswordEntry {
         return false;
     }
 
+
+    public static boolean deleteByNameCat(List<PasswordEntry> list, String oldName, String oldCategory) {
+        int index = -1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getCategory().equals(oldCategory) && list.get(i).getName().equals(oldName)) {
+                index = i;
+            }
+        }
+        if (index >= 0) {
+            list.remove(index);
+            return true;
+        }
+        return false;
+
+    }
+
+
     public static void addEntryToCategory(List<PasswordEntry> list, PasswordEntry entry) {
         String category = entry.getCategory();
         int index = -1;
@@ -140,6 +157,13 @@ public class PasswordEntry {
                 "        <created>" + ConfigXmlParser.escapeTextValue(getCreated()) + "</created>\n" +
                 "        <lastModified>" + ConfigXmlParser.escapeTextValue(getLastModified()) + "</lastModified>\n" +
                 "    </entry>\n";
+    }
+
+    public boolean isEmpty() {
+        return isEmptyAttribute(name) && isEmptyAttribute(category) && isEmptyAttribute(username) && isEmptyAttribute(password);
+    }
+    private boolean isEmptyAttribute(String attr) {
+        return attr == null || "".equals(attr);
     }
 }
 

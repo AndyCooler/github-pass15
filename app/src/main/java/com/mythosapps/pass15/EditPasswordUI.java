@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +80,32 @@ public class EditPasswordUI {
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        final TextView deleteTextField = new TextView(parent);
+        deleteTextField.setClickable(true);
+        deleteTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_black_24dp, 0);
+        linearLayout.addView(deleteTextField);
+        deleteTextField.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (deleteTextField.getRight() - deleteTextField.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        usernameTextField.setText("");
+                        passwordTextField.setText("");
+                        nameTextField.setText("");
+                        categoryTextField.setText("");
+                        v.getParent().requestLayout();
+                        if (!isCreatingNewEntry) {
+                            Toast.makeText(parent.getApplicationContext(), R.string.edit_password_confirm_delete, Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         categoryTextField = new EditText(parent);
         categoryTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);

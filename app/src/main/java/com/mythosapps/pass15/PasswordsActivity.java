@@ -276,7 +276,11 @@ public class PasswordsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                PasswordEntry.replaceByNameCat(list, taskUI.getEntry(), oldName, oldCategory); // applies changes from UI
+                if (taskUI.getEntry().isEmpty()) {
+                    PasswordEntry.deleteByNameCat(list, oldName, oldCategory);
+                } else {
+                    PasswordEntry.replaceByNameCat(list, taskUI.getEntry(), oldName, oldCategory); // applies changes from UI
+                }
                 encryptedStorage.saveExternalConfigXml(PasswordsActivity.this, list);
                 initialize();
             }
