@@ -254,12 +254,14 @@ public class PasswordsActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 PasswordEntry entry = taskUI.getEntry();
                 entry.setCreated(entry.getLastModified());
-                if (list.contains(entry)) {
-                    Toast.makeText(PasswordsActivity.this.getApplicationContext(), R.string.new_password_error_exists, Toast.LENGTH_SHORT).show();
-                    return;
+                if (!taskUI.getEntry().isEmpty()) {
+                    if (list.contains(entry)) {
+                        Toast.makeText(PasswordsActivity.this.getApplicationContext(), R.string.new_password_error_exists, Toast.LENGTH_SHORT).show();
+                    } else {
+                        PasswordEntry.addEntryToCategory(list, entry);
+                        encryptedStorage.saveExternalConfigXml(PasswordsActivity.this, list);
+                    }
                 }
-                PasswordEntry.addEntryToCategory(list, entry);
-                encryptedStorage.saveExternalConfigXml(PasswordsActivity.this, list);
                 initialize();
             }
         });
@@ -270,6 +272,7 @@ public class PasswordsActivity extends AppCompatActivity {
     public void menuEditTask(PasswordEntry data) {
         final String oldName = data.getName();
         final String oldCategory = data.getCategory();
+        final int listIndex = list.indexOf(data);
         final EditPasswordUI taskUI = new EditPasswordUI(this, getString(R.string.edit_password_title), data);
 
         taskUI.setOkButton(getString(R.string.edit_password_edit_button), new DialogInterface.OnClickListener() {
@@ -277,7 +280,7 @@ public class PasswordsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (taskUI.getEntry().isEmpty()) {
-                    PasswordEntry.deleteByNameCat(list, oldName, oldCategory);
+                    PasswordEntry.deleteByIndex(list, listIndex);
                 } else {
                     PasswordEntry.replaceByNameCat(list, taskUI.getEntry(), oldName, oldCategory); // applies changes from UI
                 }

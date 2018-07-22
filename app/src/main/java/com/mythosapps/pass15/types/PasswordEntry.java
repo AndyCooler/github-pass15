@@ -47,19 +47,13 @@ public class PasswordEntry {
     }
 
 
-    public static boolean deleteByNameCat(List<PasswordEntry> list, String oldName, String oldCategory) {
-        int index = -1;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getCategory().equals(oldCategory) && list.get(i).getName().equals(oldName)) {
-                index = i;
-            }
-        }
-        if (index >= 0) {
-            list.remove(index);
+    public static boolean deleteByIndex(List<PasswordEntry> list, int listIndex) {
+
+        if (listIndex >= 0) {
+            list.remove(listIndex);
             return true;
         }
         return false;
-
     }
 
 
