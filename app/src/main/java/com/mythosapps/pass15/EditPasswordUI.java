@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MotionEvent;
@@ -81,7 +82,7 @@ public class EditPasswordUI {
         categoryTextField = new EditText(parent);
         categoryTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         categoryTextField.setText(existingEntry.getCategory());
-        categoryTextField.setSelection(0, existingEntry.getCategory().length());
+        categoryTextField.setSelection(0);
         categoryTextField.setEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             categoryTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.DARK_BLUE_DEFAULT ) );
@@ -96,7 +97,7 @@ public class EditPasswordUI {
         nameTextField = new EditText(parent);
         nameTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         nameTextField.setText(existingEntry.getName());
-        nameTextField.setSelection(0, existingEntry.getName().length());
+        nameTextField.setSelection(0);
         nameTextField.setEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             nameTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.DARK_BLUE_DEFAULT ) );
@@ -111,7 +112,7 @@ public class EditPasswordUI {
         usernameTextField = new EditText(parent);
         usernameTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
         usernameTextField.setText(existingEntry.getUsername());
-        usernameTextField.setSelection(0, existingEntry.getUsername().length());
+        usernameTextField.setSelection(0);
         usernameTextField.setEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             usernameTextField.setBackgroundTintList( ColorStateList.valueOf(ColorsUI.SELECTION_BG ) );
@@ -144,7 +145,7 @@ public class EditPasswordUI {
         passwordTextField = new EditText(parent);
         passwordTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         passwordTextField.setText(existingEntry.getPassword());
-        passwordTextField.setSelection(0, existingEntry.getPassword().length());
+        passwordTextField.setSelection(0);
         passwordTextField.setEnabled(true);
         passwordTextField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_content_copy_black_24dp, 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
