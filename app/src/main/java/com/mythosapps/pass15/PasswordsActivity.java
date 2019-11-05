@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
 /**
  * This activity lets the user see on how many days they were working in a month, and what kind of
  * day each day was.
@@ -36,6 +39,9 @@ public class PasswordsActivity extends AppCompatActivity {
 
     // Navigation
     public final static String EXTRA_MESSAGE = "com.mythosapps.pass15.MESSAGE";
+
+    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_FLOW = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, .1f);
+    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_MAX = new TableRow.LayoutParams(0, WRAP_CONTENT, .4f);
 
     // Storage
     private ConfigStorageFacade plaintextStorage;
@@ -113,10 +119,15 @@ public class PasswordsActivity extends AppCompatActivity {
 
         TableLayout table = (TableLayout) findViewById(R.id.tableView);
         table.removeAllViews();
-        table.setColumnStretchable(4, true);
+        table.setShrinkAllColumns(true);
+        table.setColumnShrinkable(1, true);
+        //table.setColumnStretchable(1, true);
+        table.setColumnShrinkable(2, true);
+        //table.setColumnShrinkable(3, true);
+
         TableRow row = null;
         TableRow previousRow = null;
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(MATCH_PARENT, WRAP_CONTENT, 1.0f);
 
         String previousCategory = null;
 
@@ -146,11 +157,11 @@ public class PasswordsActivity extends AppCompatActivity {
                 row = new TableRow(this);
                 row.setLayoutParams(lp);
 
-                row.addView(createTextView(data.getCategory()));
-                row.addView(createTextView(data.getName()));
-                //int itemColor = calcItemColor(task0.getKindOfDay(), task0.isComplete());
-                row.addView(createTextView(trimmed(data.getUsername())));
-                row.addView(createTextView("***"));
+                row.addView(createTextViewInFlow(data.getCategory(), ColorsUI.DARK_BLUE_DEFAULT));
+                row.addView(createTextViewMaxWidth(data.getName(), ColorsUI.DARK_BLUE_DEFAULT));
+
+                row.addView(createTextViewMaxWidth(data.getUsername(), ColorsUI.DARK_BLUE_DEFAULT));
+                row.addView(createTextViewRight("***", ColorsUI.DARK_BLUE_DEFAULT));
 
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -195,15 +206,33 @@ public class PasswordsActivity extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText(text);
         textView.setTextColor(color);
-        textView.setBackgroundColor(random.nextInt(4));
-        textView.setGravity(Gravity.LEFT);
-        textView.setPadding(5, 5, 5, 5); // 15, 5, 15, 5
+        textView.setBackgroundColor(random.nextInt(4)); // TODO ??
         textView.setPadding(10, 5, 5, 5);
+        textView.setSingleLine(true);
         return textView;
     }
 
-    private TextView createTextView(String text) {
-        return createTextView(text, ColorsUI.DARK_BLUE_DEFAULT);
+    private TextView createTextViewInFlow(String text, int color) {
+        TextView textView = createTextView(text, color);
+        // siehe https://developer.android.com/guide/topics/ui/layout/linear#prioritize-weight
+        textView.setLayoutParams(TEXTVIEW_LAYOUT_PARAMS_FLOW);
+        textView.setGravity(Gravity.LEFT);
+        //textView.setSingleLine(false);
+        return textView;
+    }
+
+    private TextView createTextViewRight(String text, int color) {
+        TextView textView = createTextView(text, color);
+        textView.setLayoutParams(TEXTVIEW_LAYOUT_PARAMS_FLOW);
+        textView.setGravity(Gravity.RIGHT);
+        return textView;
+    }
+
+    private TextView createTextViewMaxWidth(String text, int color) {
+        TextView textView = createTextView(text, color);
+        textView.setLayoutParams(TEXTVIEW_LAYOUT_PARAMS_MAX);
+        textView.setGravity(Gravity.LEFT);
+        return textView;
     }
 
     @Override
