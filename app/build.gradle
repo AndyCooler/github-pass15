@@ -24,8 +24,8 @@ android {
         applicationId "com.mythosapps.pass15"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
