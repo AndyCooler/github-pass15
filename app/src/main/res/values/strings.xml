@@ -15,6 +15,7 @@
     <string name="edit_password_generate_button">Generate</string>
     <string name="edit_password_show_hide_button">Show/Hide</string>
     <string name="edit_password_confirm_delete">Press \'Save\' to confirm delete.</string>
+    <string name="search_button">Go!</string>
     <string name="menu_about">About..</string>
     <string name="new_unlock_code_save_success">Code saved.</string>
     <string name="new_unlock_code_save_error">Error: Code NOT saved!</string>

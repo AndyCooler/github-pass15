@@ -40,8 +40,8 @@ public class PasswordsActivity extends AppCompatActivity {
     // Navigation
     public final static String EXTRA_MESSAGE = "com.mythosapps.pass15.MESSAGE";
 
-    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_FLOW = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, .1f);
-    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_MAX = new TableRow.LayoutParams(0, WRAP_CONTENT, .4f);
+    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_FLOW = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, .3f);
+    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_MAX = new TableRow.LayoutParams(0, WRAP_CONTENT, .7f);
 
     // Storage
     private ConfigStorageFacade plaintextStorage;
@@ -52,6 +52,7 @@ public class PasswordsActivity extends AppCompatActivity {
     private Random random = new Random();
     private static boolean isPaused;
     private static Timestamp lastUserActivity = new Timestamp(System.currentTimeMillis());
+    private String searchKeyword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,14 @@ public class PasswordsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 menuNewTask();
+            }
+        });
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuSearch();
             }
         });
 
@@ -120,10 +129,6 @@ public class PasswordsActivity extends AppCompatActivity {
         TableLayout table = (TableLayout) findViewById(R.id.tableView);
         table.removeAllViews();
         table.setShrinkAllColumns(true);
-        table.setColumnShrinkable(1, true);
-        //table.setColumnStretchable(1, true);
-        table.setColumnShrinkable(2, true);
-        //table.setColumnShrinkable(3, true);
 
         TableRow row = null;
         TableRow previousRow = null;
@@ -150,6 +155,9 @@ public class PasswordsActivity extends AppCompatActivity {
             PasswordEntry.addEntryToCategory(list, data);
         }
 
+        if (searchKeyword == null || searchKeyword.trim().equals("")) {
+            searchKeyword = "@@no_search_keyword@@";
+        }
         for (final PasswordEntry data : list) {
 
             if (data != null) {
@@ -157,11 +165,9 @@ public class PasswordsActivity extends AppCompatActivity {
                 row = new TableRow(this);
                 row.setLayoutParams(lp);
 
-                row.addView(createTextViewInFlow(data.getCategory(), ColorsUI.DARK_BLUE_DEFAULT));
-                row.addView(createTextViewMaxWidth(data.getName(), ColorsUI.DARK_BLUE_DEFAULT));
-
-                row.addView(createTextViewMaxWidth(data.getUsername(), ColorsUI.DARK_BLUE_DEFAULT));
-                row.addView(createTextViewRight("***", ColorsUI.DARK_BLUE_DEFAULT));
+                int color = matches(data.getName()) || matches(data.getUsername()) ? ColorsUI.RED_FLAGGED : ColorsUI.DARK_BLUE_DEFAULT;
+                row.addView(createTextViewInFlow(data.getCategory(), color));
+                row.addView(createTextViewMaxWidth(data.getName(), color));
 
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,6 +186,10 @@ public class PasswordsActivity extends AppCompatActivity {
 //        table.addView(line);
 
         Log.i(getClass().getName(), "initialize() finished.");
+    }
+
+    private boolean matches(String name) {
+        return  name == null ? false : name.contains(searchKeyword);
     }
 
     private String trimmed(String displayString) {
@@ -321,4 +331,18 @@ public class PasswordsActivity extends AppCompatActivity {
         taskUI.show();
     }
 
+    public void menuSearch() {
+        final SearchUI taskUI = new SearchUI(this);
+
+        taskUI.setOkButton(getString(R.string.search_button), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                searchKeyword = taskUI.getSearchKeyword();
+                initialize();
+            }
+        });
+        taskUI.setCancelButton(getString(R.string.new_password_cancel_button));
+        taskUI.show();
+    }
 }
