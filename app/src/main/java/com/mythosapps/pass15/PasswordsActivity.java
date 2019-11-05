@@ -41,7 +41,7 @@ public class PasswordsActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.mythosapps.pass15.MESSAGE";
 
     private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_FLOW = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, .3f);
-    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_MAX = new TableRow.LayoutParams(0, WRAP_CONTENT, .7f);
+    private static ViewGroup.LayoutParams TEXTVIEW_LAYOUT_PARAMS_MAX = new TableRow.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, .7f);
 
     // Storage
     private ConfigStorageFacade plaintextStorage;
@@ -129,6 +129,7 @@ public class PasswordsActivity extends AppCompatActivity {
         TableLayout table = (TableLayout) findViewById(R.id.tableView);
         table.removeAllViews();
         table.setShrinkAllColumns(true);
+        table.setColumnStretchable(1, true);
 
         TableRow row = null;
         TableRow previousRow = null;
@@ -189,7 +190,7 @@ public class PasswordsActivity extends AppCompatActivity {
     }
 
     private boolean matches(String name) {
-        return  name == null ? false : name.contains(searchKeyword);
+        return  name == null ? false : name.toUpperCase().contains(searchKeyword.toUpperCase());
     }
 
     private String trimmed(String displayString) {
