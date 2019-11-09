@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -53,6 +55,7 @@ public class PasswordsActivity extends AppCompatActivity {
     private static boolean isPaused;
     private static Timestamp lastUserActivity = new Timestamp(System.currentTimeMillis());
     private String searchKeyword;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,9 @@ public class PasswordsActivity extends AppCompatActivity {
         });
 
         setTitle("Passwords list");
+
+        scrollView = (ScrollView) findViewById(R.id.scrollView1);
+
 
         Log.i(getClass().getName(), "onCreate() finished.");
     }
@@ -159,6 +165,7 @@ public class PasswordsActivity extends AppCompatActivity {
         if (searchKeyword == null || searchKeyword.trim().equals("")) {
             searchKeyword = "@@no_search_keyword@@";
         }
+        boolean firstSearchResultVisible = false;
         for (final PasswordEntry data : list) {
 
             if (data != null) {
@@ -169,6 +176,10 @@ public class PasswordsActivity extends AppCompatActivity {
                 int color = matches(data.getName()) || matches(data.getUsername()) ? ColorsUI.RED_FLAGGED : ColorsUI.DARK_BLUE_DEFAULT;
                 row.addView(createTextViewInFlow(data.getCategory(), color));
                 row.addView(createTextViewMaxWidth(data.getName(), color));
+                if (!firstSearchResultVisible && color ==  ColorsUI.RED_FLAGGED) {
+                    firstSearchResultVisible = true;
+                    scrollView.requestChildFocus(row, row);
+                }
 
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -185,6 +196,10 @@ public class PasswordsActivity extends AppCompatActivity {
 //        line.setBackgroundColor(ColorsUI.DARK_GREY_SAVE_ERROR);
 //        line.setLayoutParams(new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 4));
 //        table.addView(line);
+
+//        LinearLayout linear = (LinearLayout)scrollView.getChildAt(0);
+ //       linear.getChildAt(0);
+
 
         Log.i(getClass().getName(), "initialize() finished.");
     }
@@ -310,6 +325,7 @@ public class PasswordsActivity extends AppCompatActivity {
     }
 
     public void menuEditTask(PasswordEntry data) {
+        //Log.i(getClass().getName(), "scroll: " + scrollView.getScrollY());
         final String oldName = data.getName();
         final String oldCategory = data.getCategory();
         final int listIndex = list.indexOf(data);
